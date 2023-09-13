@@ -14,7 +14,7 @@ pipeline {
     stages {
         stage('Git Checkout ') {
             steps {
-                git 'https://github.com/jaiswaladi246/DotNet-DEMO.git'
+                git 'https://github.com/DevMadhup/DotNet-App.git'
             }
         }
         
@@ -45,27 +45,13 @@ pipeline {
         
         stage('Docker Build & Tag') {
             steps {
-                script{
-                    withDockerRegistry(credentialsId: 'docker-cred') {
-                        sh "make image"
-                    }
-                }
-            }
-        }
-        
-        stage('Docker Push') {
-            steps {
-                script{
-                    withDockerRegistry(credentialsId: 'docker-cred') {
-                        sh "make push"
-                    }
-                }
+                sh 'docker build --file build/Dockerfile -t dotnetapp .'
             }
         }
         
         stage('Docker Deploy') {
             steps {
-                sh "docker run -d -p 5000:5000 adijaiswal/dotnet-demoapp"
+                sh "docker run -d -p 5000:5000 dotnetapp"
             }
         }
         
